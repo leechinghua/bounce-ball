@@ -11,6 +11,7 @@ let ground_x = 100;
 let ground_y = 500;
 let groundHeight = 5;
 let brickArray = [];
+let count = 0;
 // min, max
 function getRandomArbitary(min, max) {
   return min + Math.floor(Math.random() * (max - min));
@@ -22,6 +23,7 @@ class Brick {
     this.width = 50;
     this.height = 50;
     brickArray.push(this);
+    this.visiable = true;
   }
   drawBrick() {
     ctx.fillStyle = "lightblue";
@@ -47,8 +49,10 @@ c.addEventListener("mousemove", (e) => {
 
 function draw() {
   // 確認球是否打到磚塊
-  brickArray.forEach((brick, index) => {
-    if (brick.touchingBall(circle_x, circle_y)) {
+  brickArray.forEach((brick) => {
+    if (brick.visiable && brick.touchingBall(circle_x, circle_y)) {
+      count++;
+      brick.visiable = false;
       // 改變球(x,y)的方向速度
       if (circle_y >= brick.y + brick.height) {
         // 下方撞擊
@@ -64,8 +68,8 @@ function draw() {
         xSpeed *= -1;
       }
       // 將brick從brickArray移除
-      brickArray.splice(index, 1);
-      if (brickArray.length == 0) {
+      // brickArray.splice(index, 1);
+      if (count == 10) {
         alert("遊戲結束");
         clearInterval(game);
       }
@@ -109,7 +113,11 @@ function draw() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
   // 畫下所有brick
-  brickArray.forEach((brick) => brick.drawBrick());
+  brickArray.forEach((brick) => {
+    if (brick.visiable) {
+      brick.drawBrick();
+    }
+  });
   // 畫出可控制地板
   ctx.fillStyle = "orange";
   ctx.fillRect(ground_x, ground_y, 200, groundHeight);

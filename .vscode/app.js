@@ -10,7 +10,29 @@ let ySpeed = 20;
 let ground_x = 100;
 let ground_y = 500;
 let groundHeight = 5;
+let brickArray = [];
+// min, max
+function getRandomArbitary(min, max) {
+  return min + Math.floor(Math.random() * (max - min));
+}
+class Brick {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 50;
+    this.height = 50;
+    brickArray.push(this);
+  }
+  drawBrick() {
+    ctx.fillStyle = "lightblue";
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+}
 
+// 製作所有brick
+for (let i = 0; i < 10; i++) {
+  new Brick(getRandomArbitary(0, 950), getRandomArbitary(0, 550));
+}
 c.addEventListener("mousemove", (e) => {
   ground_x = e.clientX;
 });
@@ -53,7 +75,8 @@ function draw() {
   //   畫出黑色背景
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
+  // 畫下所有brick
+  brickArray.forEach((brick) => brick.drawBrick());
   // 畫出可控制地板
   ctx.fillStyle = "orange";
   ctx.fillRect(ground_x, ground_y, 200, groundHeight);
